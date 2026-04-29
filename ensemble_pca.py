@@ -72,12 +72,14 @@ PROTEIN_NAME = "IPNS (isopenicillin N-synthase)"
 N_PCS_SHOW   = 5      # PCs shown in the scree plot
 CHAIN_ID     = None   # None = first chain found; or e.g. "A"
 
-OUTPUT_SCREE   = "pca_scree.png"
-OUTPUT_SCATTER = "pca_scatter.png"
-OUTPUT_PC1     = "pca_pc1_profile.png"
-OUTPUT_PC2     = "pca_pc2_profile.png"
-OUTPUT_COMPARE = "pca_gnm_comparison.png"
-OUTPUT_NPZ     = "pca_results.npz"
+OUTPUT_DIR     = "/mnt/scratch/woldring/Ensemble_NMA-PCA"
+
+OUTPUT_SCREE   = os.path.join(OUTPUT_DIR, "pca_scree.png")
+OUTPUT_SCATTER = os.path.join(OUTPUT_DIR, "pca_scatter.png")
+OUTPUT_PC1     = os.path.join(OUTPUT_DIR, "pca_pc1_profile.png")
+OUTPUT_PC2     = os.path.join(OUTPUT_DIR, "pca_pc2_profile.png")
+OUTPUT_COMPARE = os.path.join(OUTPUT_DIR, "pca_gnm_comparison.png")
+OUTPUT_NPZ     = os.path.join(OUTPUT_DIR, "pca_results.npz")
 # ---------------------------------------------------------------------------
 
 
@@ -487,6 +489,8 @@ def plot_gnm_comparison(
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def main() -> None:
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
     print("=" * 65)
     print(f"  {PROTEIN_NAME}")
     print(f"  Ensemble PCA  ({N_CONFORMERS} conformers)")
@@ -558,7 +562,7 @@ def main() -> None:
     # ── Load top flexible residues for annotation ─────────────────────────────
     top_resids = None
     try:
-        npz        = np.load("contact_map_results.npz", allow_pickle=True)
+        npz        = np.load(os.path.join(OUTPUT_DIR, "contact_map_results.npz"), allow_pickle=True)
         top_resids = npz["top_flexible_resids"]
         print(f"      Loaded top_flexible_resids from contact_map_results.npz")
     except FileNotFoundError:
@@ -567,7 +571,7 @@ def main() -> None:
     # ── Load GNM/ANM results for comparison ──────────────────────────────────
     gnm_flucts_mean = anm_flucts_mean = None
     try:
-        nma = np.load("anm_gnm_results.npz", allow_pickle=True)
+        nma = np.load(os.path.join(OUTPUT_DIR, "anm_gnm_results.npz"), allow_pickle=True)
         gnm_flucts_mean = nma["gnm_flucts_mean"]
         anm_flucts_mean = nma["anm_flucts_mean"]
         print("      Loaded GNM/ANM results from anm_gnm_results.npz")

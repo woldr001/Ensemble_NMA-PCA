@@ -45,6 +45,7 @@ Output files
 
 import os
 import sys
+import os
 import warnings
 import numpy as np
 import matplotlib
@@ -72,7 +73,8 @@ N_SLOW_MODES = 3        # number of slow modes to analyse
 N_DOMAINS    = 3        # dynamic domains to identify from GNM clustering
 TOP_N        = 20       # top-flexible residues to highlight
 
-OUT_NPZ      = "anm_gnm_results.npz"
+OUTPUT_DIR   = "/mnt/scratch/woldring/Ensemble_NMA-PCA"
+OUT_NPZ      = os.path.join(OUTPUT_DIR, "anm_gnm_results.npz")
 # ---------------------------------------------------------------------------
 
 
@@ -482,6 +484,8 @@ def plot_summary(
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def main() -> None:
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
     print("=" * 65)
     print(f"  {PROTEIN_NAME}")
     print(f"  Ensemble ANM / GNM Concerted Motion Analysis  ({N_CONFORMERS} conformers)")
@@ -533,7 +537,7 @@ def main() -> None:
         # NMD file for VMD / NMWiz
         try:
             from prody import writeNMD
-            nmd_path = f"conformer_{k}_anm_modes.nmd"
+            nmd_path = os.path.join(OUTPUT_DIR, f"conformer_{k}_anm_modes.nmd")
             writeNMD(nmd_path, anm_k[:N_SLOW_MODES], ca_k)
         except Exception:
             pass
@@ -553,7 +557,7 @@ def main() -> None:
     # ── Load contact-map flexibility signal ──────────────────────────────────
     print("\n[4/6] Loading contact-map flexibility signal ...")
     try:
-        npz    = np.load("contact_map_results.npz", allow_pickle=True)
+        npz    = np.load(os.path.join(OUTPUT_DIR, "contact_map_results.npz"), allow_pickle=True)
         per_residue_flexibility = npz["per_residue_flexibility"]
         top_flexible_resids     = npz["top_flexible_resids"]
         labels_npz              = npz["labels"].tolist()
@@ -580,34 +584,34 @@ def main() -> None:
 
     plot_ensemble_fluctuations(
         gnm_flucts_all, resids, top_flexible_resids, "GNM",
-        "gnm_ensemble_fluctuations.png", PALETTE["gnm"],
+        os.path.join(OUTPUT_DIR, "gnm_ensemble_fluctuations.png"), PALETTE["gnm"],
     )
     plot_ensemble_fluctuations(
         anm_flucts_all, resids, top_flexible_resids, "ANM",
-        "anm_ensemble_fluctuations.png", PALETTE["anm"],
+        os.path.join(OUTPUT_DIR, "anm_ensemble_fluctuations.png"), PALETTE["anm"],
     )
     plot_cross_correlation(
         gnm_cc_mean, resids, top_flexible_resids, "GNM",
-        "gnm_ensemble_crosscorr.png",
+        os.path.join(OUTPUT_DIR, "gnm_ensemble_crosscorr.png"),
     )
     plot_cross_correlation(
         anm_cc_mean, resids, top_flexible_resids, "ANM",
-        "anm_ensemble_crosscorr.png",
+        os.path.join(OUTPUT_DIR, "anm_ensemble_crosscorr.png"),
     )
     plot_dynamic_domains(
         gnm_cc_mean, resids, top_flexible_resids, N_DOMAINS,
-        "dynamic_domains_ensemble.png",
+        os.path.join(OUTPUT_DIR, "dynamic_domains_ensemble.png"),
     )
     plot_overlap_with_flexibility(
         gnm_flucts_mean, anm_flucts_mean,
         per_residue_flexibility, resids, top_flexible_resids,
-        "gnm_anm_vs_flexibility.png",
+        os.path.join(OUTPUT_DIR, "gnm_anm_vs_flexibility.png"),
     )
     plot_summary(
         gnm_flucts_mean, anm_flucts_mean,
         gnm_flucts_std,  anm_flucts_std,
         per_residue_flexibility, resids, top_flexible_resids,
-        "concerted_summary.png",
+        os.path.join(OUTPUT_DIR, "concerted_summary.png"),
     )
 
     # ── Save numerical results ────────────────────────────────────────────────

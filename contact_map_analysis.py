@@ -58,11 +58,13 @@ TOP_N_RESIDUES        = 20    # most-flexible positions to highlight
 CHAIN_ID              = None  # None = first chain found; or e.g. "A"
 PLOT_INDIVIDUAL_MAPS  = True  # save a grid of individual conformer distance maps
 
-OUTPUT_MEAN_MAP = "contact_map_mean.png"
-OUTPUT_STD_MAP  = "contact_map_std.png"
-OUTPUT_FLEX_BAR = "flexibility_profile.png"
-OUTPUT_NPZ      = "contact_map_results.npz"
-OUTPUT_CSV      = "most_flexible_residues.csv"
+OUTPUT_DIR      = "/mnt/scratch/woldring/Ensemble_NMA-PCA"
+
+OUTPUT_MEAN_MAP = os.path.join(OUTPUT_DIR, "contact_map_mean.png")
+OUTPUT_STD_MAP  = os.path.join(OUTPUT_DIR, "contact_map_std.png")
+OUTPUT_FLEX_BAR = os.path.join(OUTPUT_DIR, "flexibility_profile.png")
+OUTPUT_NPZ      = os.path.join(OUTPUT_DIR, "contact_map_results.npz")
+OUTPUT_CSV      = os.path.join(OUTPUT_DIR, "most_flexible_residues.csv")
 # ---------------------------------------------------------------------------
 
 
@@ -254,6 +256,8 @@ def plot_individual_grid(
 # ── 5. Main ─────────────────────────────────────────────────────────────────
 
 def main() -> None:
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
     print("=" * 65)
     print(f"  {PROTEIN_NAME}")
     print(f"  Ensemble Cα Contact Map Analysis  ({N_CONFORMERS} conformers)")
@@ -364,7 +368,7 @@ def main() -> None:
 
     if PLOT_INDIVIDUAL_MAPS:
         plot_individual_grid(dist_matrices, common_labels, conformer_labels,
-                             "contact_map_individual.png")
+                             os.path.join(OUTPUT_DIR, "contact_map_individual.png"))
 
     # --- Summary ---
     print(f"\n{'─'*65}")
