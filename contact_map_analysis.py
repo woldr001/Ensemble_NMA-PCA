@@ -48,7 +48,7 @@ from scipy.spatial.distance import cdist
 # ---------------------------------------------------------------------------
 # USER SETTINGS
 # ---------------------------------------------------------------------------
-PDB_DIR      = "/mnt/home/woldring/TopoFormer/Contact_Maps/cd1_seq1"
+PDB_DIR      = "/mnt/home/woldring/Ensemble_NMA-PCA/cd1_seq1"
 N_CONFORMERS = 10
 PDB_PATTERN  = "cluster_repr_{i}.pdb"   # {i} is replaced by 0 … N_CONFORMERS-1
 PROTEIN_NAME = "IPNS (isopenicillin N-synthase)"

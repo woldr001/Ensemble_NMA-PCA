@@ -64,7 +64,7 @@ from matplotlib import cm
 # ---------------------------------------------------------------------------
 # USER SETTINGS
 # ---------------------------------------------------------------------------
-PDB_DIR      = "/mnt/home/woldring/TopoFormer/Contact_Maps/cd1_seq1"
+PDB_DIR      = "/mnt/home/woldring/Ensemble_NMA-PCA/cd1_seq1"
 N_CONFORMERS = 10
 PDB_PATTERN  = "cluster_repr_{i}.pdb"
 PROTEIN_NAME = "IPNS (isopenicillin N-synthase)"
